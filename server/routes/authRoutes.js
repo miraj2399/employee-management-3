@@ -3,11 +3,9 @@ const bcrypt = require("bcrypt")
 const uuid = require("uuid")
 require("dotenv").config()
 const jwt = require("jsonwebtoken")
+const User = require("../models/userModel")
 
 const router = express.Router()
-
-// willl delete upon database logic implementation
-const users = []
 
 
 router.post("/signup",async (req,res)=>{
@@ -18,20 +16,14 @@ router.post("/signup",async (req,res)=>{
 
         const salt =  await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash(password,salt)
-
-        /**
-         * DATABSE LOGIC
-         * CHECK IF username already exist in db
-         */
-        users.push({
+        await User.create({
             username:username,
-            password: hashedPassword,
-            userId: uuid.v4()
+            password:hashedPassword
         })
-        console.log(users)
         return res.sendStatus(201)
-    } catch{
-        return res.sendStatus(500)
+    } catch(err){
+        console.log(err.message)
+        return res.status(500).send({message:err.message})
     }
 
 })
@@ -45,14 +37,14 @@ router.post("/login",async (req,res)=>{
         /** 
          * DATABASE LOGIC TO BE IMPLEMENTED HERE
         */ 
-        const userRecord = users.find((user)=>username === user.username)
+        const userRecord = await User.findOne({username:username})
 
 
         if (await bcrypt.compare(password,userRecord.password)){
             jwt.sign(
                 {
                 username: username,
-                userId: userRecord.userId
+                userId: userRecord._id
             },
             process.env.ACCESS_TOKEN_SECRET,
             (err,token)=>{

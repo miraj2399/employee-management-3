@@ -1,17 +1,20 @@
 const express = require("express")
-require("dotenv").config()
+const dot = require('dotenv').config()
 const bcrypt = require("bcrypt")
 const uuid = require("uuid")
 const jwt = require("jsonwebtoken")
 const authRoutes = require("./routes/authRoutes")
 const basicAuth = require("./middleware/basicAuth")
+const connectDB = require("./config/db")
 
 
 const app = express()
 
-//middlewares
+
 app.use(express.json())
 app.use('/users',authRoutes)
+
+
 
 
 /** 
@@ -47,5 +50,8 @@ app.post("/posts",basicAuth,(req,res)=>{
 
 
 
-
-app.listen(3006)
+const PORT = process.env.SERVER_PORT
+app.listen(PORT,()=>{
+    connectDB()
+    console.log(`Server is listening to port ${PORT}`)
+})
