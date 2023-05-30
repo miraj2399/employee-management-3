@@ -10,8 +10,6 @@ async function createOrganizationHandler(req, res) {
             address:address,
             owner:req.userId
         })
-        console.log(`req.userId:${req.userId}`)
-        console.log(`new Orgnaization:${newOrganization}`)
         const organizationId = newOrganization._id.toString()
         const userId = req.userId
         const role = "owner"
@@ -24,7 +22,6 @@ async function createOrganizationHandler(req, res) {
                 }
 
             })
-        console.log(`updatedUser:${updatedUser}`)
 
         //return new organization without the owner field
         return res.status(201).send({organizationId:organizationId,name:name,address:address})
@@ -98,9 +95,6 @@ async function getAllJoinRequestsHandler(req,res){
         if (!organizationId){
             return res.status(400).send({message:"organizationId is required!","details":"you probably are not using the updated token!"})
         }
-        if (req.role !== "owner" && req.role !== "admin") {
-            return res.status(401).send({message:"unauthorized!"})
-        }
         else{
             const joinRequests = await OrganizationJoin.find({organizationId:organizationId})
             return res.status(200).send(joinRequests)
@@ -116,20 +110,18 @@ async function getAllJoinRequestsHandler(req,res){
 async function approveJoinRequestHandler(req,res){
     try{
         const {_id,organizationId,userId,approved,rejected} = req.body
-        if (req.organizationId===organizationId && (req.role==="owner" || req.role==="admin")){
-            if ((approved&&rejected)){
+        if (req.organizationId===organizationId){
+            if (approved&&rejected){
                 return res.status(400).send({message:"approved and rejected cannot be true at the same time!"})
             }
             if (approved){
-                const approvedModerator = await User.findByIdAndUpdate(userId,
+                 await User.findByIdAndUpdate(userId,
                     {
                         $set:{
                             organizationId:organizationId,
                             role:"moderator"
                         }
                     })
-                console.log(`userId:${userId}`)
-                console.log(`approvedModerator:${approvedModerator}`)
 
                 await OrganizationJoin.findByIdAndUpdate(_id,
                     {
@@ -167,14 +159,14 @@ async function approveJoinRequestHandler(req,res){
 
 const updatePermissionsHandler = async (req,res) => {
     try{
-        console.log("request to update permissions received!")
+        
         const {userId,moderatorPermissions} = req.body
         const moderator = await User.findOne({_id:userId})
         if (!moderator){
             return res.status(400).send({message:"invalid userId!"})
         }
-        if (!(req.role !== "owner" || req.role !== "admin") && req.organizationId !== moderator.organizationId){
-            return res.status(401).send({message:"unauthorized!"})
+        if (req.organizationId!==moderator.organizationId){
+            return res.status(401).send({message:"unauthorized!",details:"you are not a owner or ammin of this organization!"})
         }
         else{
             const updatedModerator = await User.findOneAndUpdate({_id:userId},

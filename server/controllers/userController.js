@@ -36,7 +36,8 @@ async function loginHandler(req,res){
                 username: username,
                 userId: userRecord._id.toString(),
                 organizationId: userRecord.organizationId || null,
-                role: userRecord.role || null
+                role: userRecord.role || null,
+                moderatorPermissions: userRecord.moderatorPermissions || null,
             },
             process.env.ACCESS_TOKEN_SECRET,
             (err,token)=>{

@@ -11,11 +11,14 @@ const basicAuth = require("./middleware/basicAuth")
 
 
 
+
+
 const app = express()
 
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+
 app.use('/users',userRoutes)
 app.use('/organizations',basicAuth,organizationRoutes)
 app.use('/revenueRecords',revenueRecordRoutes)

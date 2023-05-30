@@ -20,6 +20,7 @@ async function basicAuth(req,res,next){
         req.userId = userId || null,
         req.organizationId = organizationId || null,
         req.role = token.role|| null
+        console.log(`username: ${req.username}, userId: ${req.userId}, organizationId: ${req.organizationId}, role: ${req.role}`)
         next()
     } catch(err) {
         return res.status(401).send({
