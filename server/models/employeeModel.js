@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const employeeSchema = mongoose.Schema({
-    employeeId: {
+    employeeNumber: {
         type: String,
         required: true,
         validate: {
@@ -11,7 +11,7 @@ const employeeSchema = mongoose.Schema({
                 }
                 );
             },
-            message: 'Employee ID can only contain letters and must be unique',
+            message: 'Employee number can only contain letters and must be unique',
             }
         },
     organizationId: {

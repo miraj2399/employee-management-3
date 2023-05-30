@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const timeRecordSchema = mongoose.Schema({
-    organization: {
+    organizationId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: true,
@@ -15,7 +15,7 @@ const timeRecordSchema = mongoose.Schema({
         type: Date,
         required: true,
     },
-    employee: {
+    employeeId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Employee',
         required: true,

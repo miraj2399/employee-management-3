@@ -36,14 +36,14 @@ async function getEmployeeByIdHandler(req,res){
 
 async function createEmployeeHandler(req,res){
     try{
-    const { employeeId, firstName, lastName, contact, hourlyRate} = req.body
+    const { employeeNumber, firstName, lastName, contact, hourlyRate} = req.body
     const organizationId = req.organizationId
     if (!organizationId){
         return res.status(400).send({message:"organizationId is required!"})
     }
 
     const newEmployee = await Employee.create({ 
-        employeeId:employeeId,
+        employeeNumber:employeeNumber,
         organizationId: req.organizationId,
         firstName: firstName,
         lastName: lastName,
@@ -58,7 +58,7 @@ async function createEmployeeHandler(req,res){
 
 async function updateEmployeeByIdHandler(req,res){
     const id = req.params.id
-    const { employeeId, firstName, lastName, contact, hourlyRate} = req.body
+    const { employeeNumber, firstName, lastName, contact, hourlyRate} = req.body
     const organizationId = req.organizationId
     try{
     if (!organizationId){
@@ -66,7 +66,7 @@ async function updateEmployeeByIdHandler(req,res){
     }
     else{
         const updatedEmployee = await Employee.findOneAndUpdate({_id:id},{$set:{
-            employeeId:employeeId,
+            employeeNumber:employeeNumber,
             organizationId: req.organizationId,
             firstName: firstName,
             lastName: lastName,

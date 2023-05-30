@@ -10,30 +10,30 @@ const {
     deleteTimeRecordByIdHandler,
     deleteMultipleTimeRecordsHandler
 } = require('../controllers/timeRecordController');
-
-
+const accessControl = require('../middleware/accessControl');
 // Get all clock-in/clock-out records for employees
-router.get('/', getAllTimeRecordsHandler);
+router.get('/', (req,res,next)=>{accessControl("timeRecord","view")(req,res,next)}, getAllTimeRecordsHandler);
 
-// Get time record by ID
-router.get('/:id', getTimeRecordByIdHandler);
 
-// Get the latest 7 days clock-in/clock-out records
-router.get('/latest', getLatestTimeRecordsHandler);
+// Get the latest x days clock-in/clock-out records
+router.get('/latest/:days',(req,res,next)=>{accessControl("timeRecord","view")(req,res,next)}, getLatestTimeRecordsHandler);
 
 // Search time records with a specified range
-router.get('/search', searchTimeRecordsHandler);
+router.get('/search',(req,res,next)=>{accessControl("timeRecord","view")(req,res,next)},searchTimeRecordsHandler);
 
 // Post clock-in/clock-out records for employees
-router.post('/', postTimeRecordsHandler);
+router.post('/',(req,res,next)=>{accessControl("timeRecord","add")(req,res,next)}, postTimeRecordsHandler);
+
+// Get time record by ID
+router.get('/:id',(req,res,next)=>{accessControl("timeRecord","view")(req,res,next)}, getTimeRecordByIdHandler);
 
 // Update time record by ID
-router.put('/:id', updateTimeRecordByIdHandler);
+router.put('/:id',(req,res,next)=>{accessControl("timeRecord","update")(req,res,next)}, updateTimeRecordByIdHandler);
 
 // Delete time record by ID
-router.delete('/:id', deleteTimeRecordByIdHandler);
+router.delete('/:id',(req,res,next)=>{accessControl("timeRecord","delete")(req,res,next)}, deleteTimeRecordByIdHandler);
 
 // Delete multiple time records
-router.delete('/', deleteMultipleTimeRecordsHandler);
+router.delete('/',(req,res,next)=>{accessControl("timeRecord","delete")(req,res,next)}, deleteMultipleTimeRecordsHandler);
 
 module.exports = router;

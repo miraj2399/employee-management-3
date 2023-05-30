@@ -21,8 +21,8 @@ app.use(express.urlencoded({extended:true}))
 
 app.use('/users',userRoutes)
 app.use('/organizations',basicAuth,organizationRoutes)
-app.use('/revenueRecords',revenueRecordRoutes)
-app.use('/timeRecords',timeRecordRoutes)
+app.use('/revenueRecords',basicAuth,revenueRecordRoutes)
+app.use('/timeRecords',basicAuth,timeRecordRoutes)
 app.use('/employees',basicAuth,employeeRoutes)
 
 
