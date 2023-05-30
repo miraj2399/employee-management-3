@@ -10,6 +10,8 @@ const {
   deleteEmployeeByIdHandler,
   deleteMultipleEmployeesHandler
 } = require('../controllers/employeeController');
+const accessControl = require('../middleware/accessControl');
+
 
 // Define the routes
 
@@ -17,7 +19,7 @@ const {
  * Get all employees
  * GET /employees
  */
-router.get('/', getAllEmployeesHandler);
+router.get('/',(req,res,next)=>{accessControl("employee","view")(req,res,next)}, getAllEmployeesHandler);
 
 /**
  * Get employee by ID
@@ -29,7 +31,7 @@ router.get('/:id', getEmployeeByIdHandler);
  * Create a new employee
  * POST /employees
  */
-router.post('/', createEmployeeHandler);
+router.post('/', (req,res,next)=>{accessControl("employee","add")(req,res,next)},createEmployeeHandler);
 
 /**
  * Update employee by ID

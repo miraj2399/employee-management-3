@@ -165,7 +165,7 @@ const updatePermissionsHandler = async (req,res) => {
         if (!moderator){
             return res.status(400).send({message:"invalid userId!"})
         }
-        if (req.organizationId!==moderator.organizationId){
+        if (req.organizationId.toString()!==moderator.organizationId.toString()){
             return res.status(401).send({message:"unauthorized!",details:"you are not a owner or ammin of this organization!"})
         }
         else{

@@ -1,19 +1,24 @@
+const User = require("../models/userModel")
 function accessControl(functionality,access){
-    return (req,res,next) => {
+    return async (req,res,next) => {
 
-        if(req){
-            console.log(req.role)
+        try{
             if(req.role === "admin"|| req.role === "owner"){
                 next()
-            }else{
-                if(req.role=="moderator" && req.moderatorPermissions[functionality] === access){
+            }else if(req.role === "moderator"){
+                console.log("checking moderator permissions")
+                    const moderator = await User.findOne({_id:req.userId})
+                    if (moderator["moderatorPermissions"][functionality][access]){
                     next()
-                }else{
-                    res.status(401).send("Unauthorized")
+                    }
+                    else{
+                    return res.status(401).send("Unauthorized")
                 }
             }
-        }else{
-            res.status(401).send("Unauthorized")
+        }
+        catch(err){
+            console.log(err)
+            return res.status(500).send({message:err.message})
         }
     }
 }

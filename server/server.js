@@ -23,7 +23,7 @@ app.use('/users',userRoutes)
 app.use('/organizations',basicAuth,organizationRoutes)
 app.use('/revenueRecords',revenueRecordRoutes)
 app.use('/timeRecords',timeRecordRoutes)
-app.use('/employees',employeeRoutes)
+app.use('/employees',basicAuth,employeeRoutes)
 
 
 

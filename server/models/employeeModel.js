@@ -14,7 +14,7 @@ const employeeSchema = mongoose.Schema({
             message: 'Employee ID can only contain letters and must be unique',
             }
         },
-    organization: {
+    organizationId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: true,
