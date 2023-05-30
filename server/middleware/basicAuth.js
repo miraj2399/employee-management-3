@@ -14,9 +14,12 @@ function verifyToken(payload){
 async function basicAuth(req,res,next){
     try{
         const token = await verifyToken(req.body.token)
-        const {username,userId} = token
-        req.username =username
-        req.userId = userId
+        const {username,userId,organizationId} = token
+        
+        req.username =username || null
+        req.userId = userId || null,
+        req.organizationId = organizationId || null,
+        req.role = token.role|| null
         next()
     } catch(err) {
         return res.status(401).send({

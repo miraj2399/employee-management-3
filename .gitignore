@@ -3,3 +3,4 @@ config/
 node_modules/
 todos
 .DS_Store
+scripts/
