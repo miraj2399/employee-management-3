@@ -63,7 +63,15 @@ const employeeSchema = mongoose.Schema({
             },
             message: 'Hourly rate must be greater than or equal to 0'
         }
-    }});
+    }},
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+        },
+        
+        }
+        );
 
 const Employee = mongoose.model('Employee', employeeSchema);
 module.exports = Employee;

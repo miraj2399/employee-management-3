@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken")
 const User = require("../models/userModel")
 const Organization = require("../models/organizationModel")
 const { use } = require("../routes/organizationRoutes")
+const generateToken = require("../utils/tokenGenerator")
 async function signUpHandler(req,res){
     try{
         const {username,password} = req.body
@@ -21,8 +22,12 @@ async function signUpHandler(req,res){
     }
 }
 
+
 async function loginHandler(req,res){
+    console.log("login handler\n")
+    console.log(req.body)
     try{
+
         const username = req.body.username
         const password = req.body.password
 
@@ -30,30 +35,14 @@ async function loginHandler(req,res){
 
 
         if (await bcrypt.compare(password,userRecord.password)){
-            console.log(userRecord,userRecord._id.toString())
-            jwt.sign(
-                {
-                username: username,
-                userId: userRecord._id.toString(),
-                organizationId: userRecord.organizationId || null,
-                role: userRecord.role || null
-            },
-            process.env.ACCESS_TOKEN_SECRET,
-            (err,token)=>{
-                if (err){
-                    req.status(401).send({"message":"error creating JWT!"})
-                    return
-                }
-                return res.status(200).send({token:token})
-
-            }
-            )
+            const token = await generateToken(userRecord)
+            // set token in body
+            return res.status(200).send({"message":"login successful","token":"Bearer "+token})
         }
         else{
             return res.status(401).send({"message":"authorization failed!"})
         }
     } catch(err){
-        console.log(err)
         return res.status(500).send({message:err.message})
     }
 }

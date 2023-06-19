@@ -1,0 +1,27 @@
+.date{
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #000000;
+}
+
+.revenue-green{
+    color: #00B87C;
+    font-weight: bold;
+}
+
+.revenue-red{
+    color: #FF0000;
+    font-weight: bold;
+}
+
+.center-text {
+   padding-left: 50px;
+  }
+
+  .container {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  
+  

@@ -35,7 +35,7 @@ router.get('/join', (req,res,next)=>{
 // approve or reject a request to join an organization (must be made from an admin account)
 router.put('/approve', (req,res,next)=>{accessControl("","")(req,res,next)}, approveJoinRequestHandler);
 
-// Get details of an organization by ID
+// Get details of an organization by name
 router.get('/:name', getOrganizationByNameHandler);
 
 module.exports = router;

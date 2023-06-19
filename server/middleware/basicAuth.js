@@ -19,7 +19,6 @@ async function basicAuth(req,res,next){
             })
         }
         const payload = req.headers.authorization.split(" ")[1]
-        console.log(payload)
         const token = await verifyToken(payload)
         console.log(token)
         const {username,userId,organizationId} = token

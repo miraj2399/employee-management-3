@@ -1,7 +1,7 @@
 
 const Employee = require("../models/employeeModel")
 const Organization = require("../models/organizationModel")
-
+const TimeRecord = require("../models/timeRecordModel")
 async function getAllEmployeesHandler(req,res){
     const organizationId = req.organizationId
     if (!organizationId){
@@ -12,7 +12,10 @@ async function getAllEmployeesHandler(req,res){
         return res.status(200).send(employees)
     }
 }
-
+async function getEmployeeById(organizationId,id){
+    const employee = await Employee.findOne({_id:id,organizationId:organizationId})
+    return employee
+}
 async function getEmployeeByIdHandler(req,res){
     const id = req.params.id
     const organizationId = req.organizationId
@@ -21,7 +24,7 @@ async function getEmployeeByIdHandler(req,res){
         return res.status(400).send({message:"organizationId is required!"})
     }
     else{
-        const  employee = await Employee.findOne({_id:id,organizationId:organizationId})
+        const  employee = await getEmployeeById(organizationId,id)
         if (!employee){
             return res.status(404).send({message:"employee not found!"})
         }
@@ -111,6 +114,7 @@ async function deleteEmployeeByIdHandler(req,res){
 }
 
 async function deleteMultipleEmployeesHandler(req,res){
+    console.log(req.body)
     const employeeIds = req.body.map(employee => employee._id)
     const organizationId = req.organizationId
     try{
@@ -118,6 +122,9 @@ async function deleteMultipleEmployeesHandler(req,res){
             return res.status(400).send({message:"organizationId is required!"})
         } else{
             const deletedEmployees = await Employee.deleteMany({_id:{$in:employeeIds}})
+            // delete related timerecords
+            const deletedTimeRecords = await TimeRecord.deleteMany({employee:{$in:employeeIds}})
+            console.log(deletedTimeRecords)
             return res.status(200).send(deletedEmployees)
         }
     }
@@ -130,6 +137,7 @@ async function deleteMultipleEmployeesHandler(req,res){
 module.exports={
     getAllEmployeesHandler,
     getEmployeeByIdHandler,
+    getEmployeeById,
     createEmployeeHandler,
     updateEmployeeByIdHandler,
     deleteEmployeeByIdHandler,

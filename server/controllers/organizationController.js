@@ -1,5 +1,6 @@
 const {Organization,OrganizationJoin} =  require('../models/organizationModel')
 const User = require('../models/userModel')
+const { generateToken } = require('../utils/tokenGenerator')
 
 async function createOrganizationHandler(req, res) {
     
@@ -24,6 +25,8 @@ async function createOrganizationHandler(req, res) {
             })
 
         //return new organization without the owner field
+        const newToken = await generateToken(updatedUser)
+        res.setHeader("new-token",newToken)
         return res.status(201).send({organizationId:organizationId,name:name,address:address})
 
 

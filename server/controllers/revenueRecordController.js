@@ -31,6 +31,11 @@ async function getRevenueRecordByIdHandler(req,res){
     }
 }
 
+async function getLatestRevenueRecords(organizationId,days){
+    const revenueRecords = await RevenueRecord.find({organizationId:organizationId}).sort({date:1}).limit(days)
+    return revenueRecords
+}
+
 
 async function getLatestRevenueRecordsHandler(req,res){
    const days = req.params.days
@@ -40,7 +45,7 @@ async function getLatestRevenueRecordsHandler(req,res){
             return res .status(400).send({message:"organizationId is required!"})
         }
         else{
-            const revenueRecords = await RevenueRecord.find({organizationId:organizationId}).sort({createdAt:-1}).limit(days)
+            const revenueRecords = await getLatestRevenueRecords(organizationId,days)
             return res.status(200).send(revenueRecords)
         }
     } catch(err){
@@ -48,6 +53,7 @@ async function getLatestRevenueRecordsHandler(req,res){
         return res.status(500).send({message:err.message})
     }
 }
+
 
 async function searchRevenueRecordsHandler(req,res){
     const {startDate,endDate} = req.body
@@ -146,6 +152,7 @@ async function deleteMultipleRevenueRecordsHandler(req,res){
 module.exports={
     getAllRevenueRecordsHandler,
     getRevenueRecordByIdHandler,
+    getLatestRevenueRecords,
     getLatestRevenueRecordsHandler,
     searchRevenueRecordsHandler,
     createRevenueRecordHandler,

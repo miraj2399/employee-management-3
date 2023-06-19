@@ -15,7 +15,7 @@ const timeRecordSchema = mongoose.Schema({
         type: Date,
         required: true,
     },
-    employeeId: {
+    employee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Employee',
         required: true,
